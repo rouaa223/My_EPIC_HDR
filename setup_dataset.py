@@ -17,7 +17,7 @@ test_dir.mkdir(parents=True, exist_ok=True)
 
 # Vérifier si train et test sont vides
 if not any(train_dir.iterdir()) and not any(test_dir.iterdir()):
-    print("📁 Répartition des images en train/test...")
+    print(" Répartition des images en train/test...")
 
     # Trouver toutes les images .hdr (minuscules et majuscules)
     all_images = list(root_dir.glob("*.hdr")) + list(root_dir.glob("*.HDR"))
@@ -44,8 +44,8 @@ if not any(train_dir.iterdir()) and not any(test_dir.iterdir()):
         if not dst.exists():
             shutil.copy(src, dst)
 
-    print(f"✅ {len(train_files)} images copiées dans {train_dir}")
-    print(f"✅ {len(test_files)} images copiées dans {test_dir}")
+    print(f"{len(train_files)} images copiées dans {train_dir}")
+    print(f"{len(test_files)} images copiées dans {test_dir}")
 
     # Créer train.txt (uniquement le nom du fichier)
     with open(root_dir / "train.txt", "w") as f:
@@ -57,7 +57,7 @@ if not any(train_dir.iterdir()) and not any(test_dir.iterdir()):
         for img in test_files:
             f.write(f"{img.name}\n")
 
-    print("✅ Fichiers train.txt et test.txt créés.")
+    print("Fichiers train.txt et test.txt créés.")
 else:
-    print("📁 Les dossiers train/ ou test/ ne sont pas vides — pas de répartition.")
+    print(" Les dossiers train/ ou test/ ne sont pas vides — pas de répartition.")
     print("   Supprimez-les ou videz-les si vous voulez refaire la répartition.")
