@@ -50,10 +50,10 @@ def _save_image(img, path, name):
 print("🔍 Chargement du checkpoint...")
 checkpoint = torch.load(checkpoint_path, map_location="cpu")
 args_lmbda = checkpoint.get('lmbda', 200)
-print(f"✅ Checkpoint chargé. Lambda utilisé: {args_lmbda}")
+print(f" Checkpoint chargé. Lambda utilisé: {args_lmbda}")
 
 # --- 2. Créer les modèles ---
-print("🏗️ Création des modèles...")
+print("Création des modèles...")
 net1 = image_models["mbt2018"](quality=1)
 net2 = image_models["ldr2hdr"](quality=1)
 net = image_models["end2end"](net1, net2)
@@ -67,10 +67,10 @@ except KeyError:
     net.load_state_dict(checkpoint)
 net.eval()
 device = next(net.parameters()).device
-print(f"✅ Modèle 'end2end' prêt sur {device}.")
+print(f" Modèle 'end2end' prêt sur {device}.")
 
 # --- 4. Charger l'image HDR originale ---
-print(f"🖼️ Chargement de l'image : {original_image_path}")
+print(f"🖼 Chargement de l'image : {original_image_path}")
 reference = imageio.imread(original_image_path).astype(np.float32)
 img_tensor = torch.from_numpy(reference).permute(2, 0, 1).unsqueeze(0).to(device)
 
@@ -79,7 +79,7 @@ s_max = torch.tensor([reference.max()]).to(device).to(torch.float32)
 
 # Sauvegarder l'image HDR d'origine
 imageio.imwrite(os.path.join(output_dir, f"{image_name}.hdr"), reference)
-print(f"✅ Image HDR originale sauvegardée.")
+print(f" Image HDR originale sauvegardée.")
 
 # --- 5. Inférence ---
 print("🚀 Inférence en cours...")
@@ -110,13 +110,13 @@ hdr_rgb = hdr_recon_normalized.squeeze().permute(1, 2, 0).cpu().numpy()
 
 reconstructed_hdr_path = os.path.join(output_dir, 'hdr', f"{image_name}_hdr.hdr")
 imageio.imwrite(reconstructed_hdr_path, hdr_rgb)
-print(f"✅ Image HDR reconstruite (.hdr) sauvegardée.")
+print(f"Image HDR reconstruite (.hdr) sauvegardée.")
 
 # Version tonemappée pour affichage
 rgb8_h_tm = tonemap(hdr_rgb / np.max(hdr_rgb))
 tm_path = os.path.join(output_dir, 'hdr', f"{image_name}_h_tm.png")
 imageio.imwrite(tm_path, rgb8_h_tm)
-print(f"✅ Image HDR tonemappée (.png) sauvegardée.")
+print(f"Image HDR tonemappée (.png) sauvegardée.")
 
 # --- 8. Sauvegarder l'image LDR reconstruite ---
 ldr_hat = out_net1["ldr_x_hat"]
@@ -126,7 +126,7 @@ ldr_out_v2 = (300 - 5) * ldr_hat_v + 5
 ldr_out2 = torch.cat([ldr_hat_hs, ldr_out_v2], dim=1)
 
 _save_image(ldr_out2, os.path.join(output_dir, 'ldr'), f"{image_name}.png")
-print(f"✅ Image LDR reconstruite (.png) sauvegardée.")
+print(f"Image LDR reconstruite (.png) sauvegardée.")
 
 # --- 9. Calculer PSNR-HDR ---
 def calculate_psnr_hdr(ref, rec):
@@ -135,7 +135,7 @@ def calculate_psnr_hdr(ref, rec):
     return psnr(ref_log, rec_log, data_range=ref_log.max() - ref_log.min())
 
 psnr_value = calculate_psnr_hdr(reference, hdr_rgb)
-print(f"📊 PSNR-HDR: {psnr_value:.4f} dB")
+print(f"PSNR-HDR: {psnr_value:.4f} dB")
 
 # --- 10. Afficher le résultat final ---
 print("\n" + "="*50)
