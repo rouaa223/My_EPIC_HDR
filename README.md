@@ -44,6 +44,10 @@ EPIC-HDR/
 # Créer un environnement virtuel
 python -m venv venv
 source venv/bin/activate  # Linux
+#Préparation du dataset
+ #Avant de procéder l'entrainement vous pouvez vider le dossier my dataset et déposer des nouveaux images .hdr(nv dataset) puis lancer
+python setup_dataset.py #ce script va te permet de diviser aléatoirement votre dataset en 80% train et 20% test 
+ 
 
 # Installer les dépendances
 pip install requirements.txt (en cas de problème de version uninstall les bibliothèques qui cause des problèmes et les installer manuellement)
