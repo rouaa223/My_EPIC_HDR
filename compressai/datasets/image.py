@@ -19,6 +19,7 @@ import skimage.color as color
 imageio.plugins.freeimage.download()
 HDR_EXTENSIONS = [
     '.hdr',
+    '.exr',
 ]
 
 def show(x, title=None, cbar=False, figsize=None):
@@ -95,6 +96,8 @@ class ImageFolder(Dataset):
 
         hdr = self.hdr_loader_imgio(filename2)
         re_I = hdr # [0:448, 0:448, :]
+        if re_I.shape[2] == 4:
+            re_I = re_I[:, :, :3]
         hdr_h = color.rgb2hsv(re_I)
         hdr_l = self.transform(hdr_h[:, :, 2][:, :, np.newaxis])
 
